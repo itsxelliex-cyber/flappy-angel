@@ -1,12 +1,15 @@
 body {
     font-family: 'Courier New', Courier, monospace;
     text-align:center;
-    
+    background-color: pink;
+
 }
 #board {
   
-   background-image: url("flappybirdbgg.png");
+   background-image: url("background.jpg");
+   
     background-size: cover;
     background-position: center;
 
 }
+

@@ -50,14 +50,14 @@ window.onload = function() {
     
     //load imgs
     birdImg = new Image();
-    birdImg.src = "flappybird1.png";
+    birdImg.src = "birdy.gif";
     birdImg.onload = function() {
     context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
     }
     topPipeImg = new Image();
-    topPipeImg.src = "./toppipe.png";
+    topPipeImg.src = "toppipe.png";
     bottomPipeImg = new Image();
-    bottomPipeImg.src = "./bottompipe.png";
+    bottomPipeImg.src = "bottompipe.png";
 
     requestAnimationFrame(update);
     setInterval(placePipes, 1500);
@@ -72,7 +72,7 @@ function update() {
     context.clearRect(0, 0, board.width, board.height);
 
     velocityY += gravity;
-    bird.y += Math.max(bird.y + velocityY, 0); //applies gravity;
+    bird.y = Math.max(bird.y + velocityY, 0); //applies gravity;
     context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
 
     if(bird.y > board.height) {
@@ -95,13 +95,17 @@ function update() {
         }
     }
 
-    while (pipeArray.length > 0 && pipeArray[0].x < 0) {
+    while (pipeArray.length > 0 && pipeArray[0].x < -pipeWidth) {
         pipeArray.shift();
     }
 
-    context.filStyle = "white";
-    context.font = "45px sans-serif";
+    context.fillStyle = "white";
+    context.font = "45px, Georgia"; 
     context.fillText(score, 5, 45);
+
+    if (gameOver) {
+        context.fillText("GAME OVER", 5, 90);
+    }
 }  
 function placePipes() {
     if(gameOver) {
@@ -137,10 +141,19 @@ function moveBird(e) {
     if (e.code == "Space" || e.code == "KeyX") {
         //jump 
         velocityY = -6;
+
+        //reset game
+        if (gameOver) {
+            bird.y = birdY;
+            velocityY = 0;
+            pipeArray = [];
+            score = 0;
+            gameOver = false;
+        }
     }
 }
 
-function detectCollision() {
+function detectCollision(a,b) {
     return a.x < b.x + b.width &&
            a.x + a.width > b.x &&
            a.y < b.y + b.height &&
